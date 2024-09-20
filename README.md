@@ -1,4 +1,4 @@
-# ogl-typescript-starter
+# ogl-starter
 
 The objective of this boilerplate is to set up everything the developer will need (in terms of configuration) to start an OGL project with TypeScript. ESLint and Prettier are configured to work independently of the user's IDE configuration (as long as it's VSCode).
 
@@ -8,7 +8,7 @@ The objective of this boilerplate is to set up everything the developer will nee
 
 ## Featured Aspects of the Stack
 
-- [OGL](https://github.com/oframe/ogl)
+- [react-ogl](https://github.com/pmndrs/react-ogl)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Next.js](https://nextjs.org/)
 
@@ -49,4 +49,4 @@ If you find you need to make extra config to make this work more seamlessly, fee
 
 ---
 
-![cover image](https://github.com/basementstudio/next-typescript/raw/main/public/og.png 'We Make Cool Sh*t That Performs')
+![cover image](https://github.com/basementstudio/next-typescript/raw/main/src/app/opengraph-image.png 'We Make Cool Sh*t That Performs')
