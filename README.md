@@ -2,7 +2,7 @@
 
 The objective of this boilerplate is to set up everything the developer will need (in terms of configuration) to start an OGL project with TypeScript. ESLint and Prettier are configured to work independently of the user's IDE configuration (as long as it's VSCode).
 
-![OGL + TypeScript](https://user-images.githubusercontent.com/13522179/174338949-b3ca8cd7-a7be-4fc2-8845-7e2c2f44a3b3.png)
+![OGL + TypeScript](https://github.com/user-attachments/assets/75c3433f-c927-4a42-8a1d-16379c161724)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbasementstudio%ogl-starter&env=NEXT_PUBLIC_SITE_URL&envDescription=e.g%3A%20https%3A%2F%2Fproject-name.vercel.app)
 
