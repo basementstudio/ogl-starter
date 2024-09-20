@@ -1,6 +1,7 @@
 {
   "name": "ogl-starter",
   "version": "0.1.0",
+  "description": "A starter for OGL projects",
   "repository": "https://github.com/basementstudio/ogl-starter",
   "author": "basement.studio",
   "private": true,
