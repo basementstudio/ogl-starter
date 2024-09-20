@@ -1,17 +1,34 @@
 {
   "name": "ogl-starter",
   "version": "0.1.0",
+  "repository": "https://github.com/basementstudio/ogl-starter",
+  "author": "basement.studio",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:analyze": "cross-env ANALYZE=true pnpm build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^14.2.13",
+    "@typescript-eslint/eslint-plugin": "^8.6.0",
+    "@typescript-eslint/parser": "^8.6.0",
+    "clsx": "^2.1.1",
+    "debounce": "^2.1.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "its-fine": "^1.2.5",
     "next": "14.2.5",
+    "next-transpile-modules": "^10.0.1",
+    "ogl": "^1.0.8",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-ogl": "^0.14.2",
+    "tailwind-merge": "^2.5.2",
+    "zustand": "5.0.0-rc.2"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -25,5 +42,20 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "typescript-plugin-css-modules": "^5.1.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "packageManager": "pnpm@9.11.0",
+  "engines": {
+    "node": "20.x"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "react-ogl@0.14.2": "patches/react-ogl@0.14.2.patch"
+    }
   }
 }

@@ -1,0 +1,13 @@
+diff --git a/dist/reconciler.mjs b/dist/reconciler.mjs
+index ddeeed45c2bac90c2f12de7f5bbc4ceb4e4bde73..28220c0097cb038de65ffa52d0cf36564e0f9a94 100644
+--- a/dist/reconciler.mjs
++++ b/dist/reconciler.mjs
+@@ -298,7 +298,7 @@ const reconciler = Reconciler({
+   detachDeletedInstance: () => {
+   }
+ });
+-const act = "unstable_act" in React ? React.unstable_act : React.act;
++const act = "unstable_act" in React ? React?.unstable_act : React?.act;
+ const isProd = typeof process === "undefined" || ((_a = process.env) == null ? void 0 : _a["NODE_ENV"]) === "production";
+ reconciler.injectIntoDevTools({
+   findFiberByHostInstance: () => null,
