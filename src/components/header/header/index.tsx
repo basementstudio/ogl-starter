@@ -22,7 +22,7 @@ export const Header = () => {
       <Link
         target="_blank"
         href="https://foundry.basement.studio/"
-        className="flex z-50 items-center justify-center gap-2 border-b border-[var(--color-gray-lighter)] bg-black h-10 w-full"
+        className="flex z-50 relative items-center justify-center gap-2 border-b border-[var(--color-gray-lighter)] h-10 w-full"
       >
         <p className="leading-[1.19rem] tracking-[-0.02em] uppercase text-[max(12px,0.625vw)]">
           Introducing BASEMENT FOUNDRY. Check it out
