@@ -6,6 +6,12 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+
+  --inspect-color: #f00;
+  --color-black: #000;
+  --color-white: #fff;
+  --color-gray: theme("colors.gray.DEFAULT");
+  --color-gray-lighter: theme("colors.gray.lighter");
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,6 +20,20 @@
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
+}
+
+html {
+  line-height: 1.5;
+  box-sizing: border-box;
+  text-rendering: geometricprecision;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* tweak if site is light mode. */
+  color-scheme: dark;
+  background-color: var(--color-black);
 }
 
 body {
@@ -31,6 +51,17 @@ body:not(.user-is-tabbing) input:focus,
 body:not(.user-is-tabbing) select:focus,
 body:not(.user-is-tabbing) textarea:focus {
   outline: none;
+}
+
+/* used in use-prevents-scroll hook */
+
+html.no-scroll {
+  overflow: hidden;
+
+  body {
+    overflow: hidden;
+    touch-action: none;
+  }
 }
 
 body.inspect * {

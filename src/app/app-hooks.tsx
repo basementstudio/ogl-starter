@@ -3,8 +3,10 @@
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { useEffect } from "react"
+import { useMedia } from "react-use"
 
-import { useAppStore } from "~/context/use-app.store"
+import { useAppStore } from "~/context/use-app-store"
+import { useDocumentLoad } from "~/hooks/use-document-load"
 import { basementLog, isClient, isDev, isProd } from "~/lib/constants"
 
 gsap.registerPlugin(useGSAP)
@@ -16,6 +18,8 @@ export const AppHooks = () => {
     console.log(basementLog)
   }
 
+  useDocumentLoad()
+  useReducedMotion()
   useOverflowDebuggerInDev()
   useUserIsTabbing()
   useFontsLoaded()
@@ -24,6 +28,14 @@ export const AppHooks = () => {
 }
 
 /* APP HOOKS */
+
+const useReducedMotion = () => {
+  const reducedMotion = useMedia("(prefers-reduced-motion: reduce)", false)
+  useEffect(() => {
+    if (reducedMotion === undefined) return
+    useAppStore.setState({ reducedMotion })
+  }, [reducedMotion])
+}
 
 const useOverflowDebuggerInDev = () => {
   useEffect(() => {

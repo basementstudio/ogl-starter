@@ -7,6 +7,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        gray: {
+          lighter: "#262626",
+          DEFAULT: "#0f0f0f"
+        }
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
