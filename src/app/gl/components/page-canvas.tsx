@@ -79,7 +79,7 @@ const PageCanvas = () => {
     <div
       id="canvas-container"
       className={clsx(
-        "fixed top-0 left-0 w-full h-screen z-canvas opacity-0",
+        "fixed top-0 left-0 w-full h-screen z-canvas transition-opacity duration-500",
         multiplyCanvas && "pointer-events-none",
         /* Opacity 0 until we render the first frame to prevent canvas flicker on start-up */
         hasRendered ? "opacity-100" : "opacity-0",
