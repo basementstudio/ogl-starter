@@ -1,33 +1,20 @@
 import { useControls } from "leva"
 import { useEffect, useMemo } from "react"
 
-import { CameraName, useAppControls } from "~/gl/hooks/use-app-controls"
+import { CameraName, useGlControls } from "~/gl/hooks/use-gl-controls"
 import { useToggleControl } from "~/gl/hooks/use-toggle-control"
 import { HtmlIn } from "~/gl/tunnel"
 import { useDevice } from "~/hooks/use-device"
 import { useMousetrap } from "~/hooks/use-mousetrap"
 
 import { Grid } from "./grid"
-import { ShadowLightHelper } from "./light-helper"
 import { OrbitHelper } from "./orbit"
 import { Stats } from "./stats"
 
-const cameraOptions = [
-  "main",
-  "orbit",
-  "shadow"
-] as const satisfies CameraName[]
+const cameraOptions = ["main", "debug-orbit"] as const satisfies CameraName[]
 
 /** Adds all the scene helpers */
 export const Helpers = () => {
-  const [lightHelper] = useToggleControl({
-    folder: "Helpers",
-    key: "lightHelper",
-    label: "Light",
-    shortcut: "l",
-    defaultValue: false
-  })
-
   const [gridHelper] = useToggleControl({
     folder: "Helpers",
     key: "gridHelper",
@@ -52,20 +39,18 @@ export const Helpers = () => {
     defaultValue: false
   })
 
-  const activeCamera = useAppControls((s) => s.activeCamera)
+  const activeCamera = useGlControls((s) => s.activeCamera)
   const [, setCamera] = useControls(() => ({
     camera: {
       label: "Camera (C)",
       value: "main", // controlled
       options: {
         "Main (M)": "main",
-        "Orbit (O)": "orbit",
-        "Shadow (S)": "shadow"
+        "Orbit (O)": "debug-orbit"
       },
       onChange: (value: CameraName) => {
-        useAppControls.setState({
-          activeCamera: value,
-          multiplyCanvas: value === "main"
+        useGlControls.setState({
+          activeCamera: value
         })
       },
       transient: false
@@ -73,6 +58,7 @@ export const Helpers = () => {
   }))
 
   useEffect(() => {
+    if (!activeCamera) return
     setCamera({
       camera: activeCamera
     })
@@ -82,31 +68,30 @@ export const Helpers = () => {
     {
       keys: "c",
       callback: () => {
+        const currentCameraIndex = cameraOptions.indexOf(
+          useGlControls.getState().activeCamera as CameraName
+        )
+
+        if (currentCameraIndex === -1) {
+          useGlControls.setState({ activeCamera: "main" })
+          return
+        }
+
         const nextCamera =
-          cameraOptions[
-            (cameraOptions.indexOf(useAppControls.getState().activeCamera) +
-              1) %
-              cameraOptions.length
-          ]
-        useAppControls.setState({ activeCamera: nextCamera })
+          cameraOptions[(currentCameraIndex + 1) % cameraOptions.length]
+        useGlControls.setState({ activeCamera: nextCamera })
       }
     },
     {
       keys: "m",
       callback: () => {
-        useAppControls.setState({ activeCamera: "main" })
+        useGlControls.setState({ activeCamera: "main" })
       }
     },
     {
       keys: "o",
       callback: () => {
-        useAppControls.setState({ activeCamera: "orbit" })
-      }
-    },
-    {
-      keys: "s",
-      callback: () => {
-        useAppControls.setState({ activeCamera: "shadow" })
+        useGlControls.setState({ activeCamera: "debug-orbit" })
       }
     }
   ])
@@ -121,7 +106,6 @@ export const Helpers = () => {
   return (
     <>
       <OrbitHelper />
-      {lightHelper && <ShadowLightHelper />}
       {gridHelper && <Grid size={20} divisions={20} />}
       {showStats && <Stats />}
       {showDeviceData && (

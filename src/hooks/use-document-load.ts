@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react"
 
+import { useAppStore } from "~/context/use-app-store"
 import { subscribable } from "~/lib/subscribable"
 
-const callbacks = subscribable()
+const pageLoadedSubscribable = subscribable()
 
-export const useDocumentLoad = () => {
+export function useSyncDocumentLoad() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -14,18 +15,19 @@ export const useDocumentLoad = () => {
 
     if (document.readyState === "complete") {
       setLoaded(true)
-    } else {
-      const loadCb = () => {
-        if (document.readyState === "complete") {
-          setLoaded(true)
-        }
-      }
+      return
+    }
 
-      document.addEventListener("readystatechange", loadCb)
-
-      return () => {
-        document.removeEventListener("readystatechange", loadCb)
+    const loadCb = () => {
+      if (document.readyState === "complete") {
+        setLoaded(true)
       }
+    }
+
+    document.addEventListener("readystatechange", loadCb)
+
+    return () => {
+      document.removeEventListener("readystatechange", loadCb)
     }
   }, [])
 
@@ -33,22 +35,11 @@ export const useDocumentLoad = () => {
     if (!loaded) return
 
     /* Run all already added */
-    callbacks.getCallbacks().map((callback: () => void) => {
-      callback()
-      callbacks.removeCallback(callback)
-    })
+    pageLoadedSubscribable.runCallbacks()
+  }, [loaded])
 
-    /* Run all the following ones */
-    const cb = (id: string) => {
-      callbacks.getCallback(id)()
-      callbacks.removeCallback(id)
-    }
-
-    callbacks.emitter.on("add", cb)
-
-    return () => {
-      callbacks.emitter.off("add", cb)
-    }
+  useEffect(() => {
+    useAppStore.setState({ pageLoadedComplete: loaded })
   }, [loaded])
 }
 
@@ -58,15 +49,22 @@ export const useDocumentLoadCallback = (
 ) => {
   useEffect(() => {
     let cbClearFn: (() => void) | undefined
+    let callbackid: string | undefined
 
     const callbackWrapper = () => {
       cbClearFn = _callback() ?? undefined
+      // remove callback after it's run
+      if (callbackid) {
+        pageLoadedSubscribable.removeCallback(callbackid)
+      }
     }
 
-    const id = callbacks.addCallback(callbackWrapper)
+    callbackid = pageLoadedSubscribable.addCallback(callbackWrapper)
 
     return () => {
-      callbacks.removeCallback(id)
+      if (callbackid) {
+        pageLoadedSubscribable.removeCallback(callbackid)
+      }
       cbClearFn?.()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

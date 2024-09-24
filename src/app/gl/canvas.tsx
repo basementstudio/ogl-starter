@@ -22,7 +22,7 @@ import {
 import useMeasure, { Options as ResizeOptions } from "~/hooks/use-measure"
 import { isClient } from "~/lib/constants"
 
-import { useAppControls } from "./hooks/use-app-controls"
+import { useGlControls } from "./hooks/use-gl-controls"
 
 export interface CanvasProps
   extends Omit<RenderProps, "size">,
@@ -98,7 +98,7 @@ const CanvasImpl = React.forwardRef<HTMLCanvasElement, CanvasProps>(
     const containerRef = React.useRef<HTMLDivElement | null>(null)
 
     React.useEffect(() => {
-      useAppControls.setState({ canvasElement: canvas })
+      useGlControls.setState({ canvasElement: canvas })
     }, [canvas])
 
     React.useEffect(() => {

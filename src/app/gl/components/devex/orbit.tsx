@@ -3,7 +3,7 @@ import { useEffect, useMemo } from "react"
 import { useFrame } from "react-ogl"
 
 import { GLOBAL_GL } from "~/gl"
-import { useAppControls } from "~/gl/hooks/use-app-controls"
+import { useGlControls } from "~/gl/hooks/use-gl-controls"
 
 export const orbitCamera = new Camera(GLOBAL_GL, {
   aspect: 45
@@ -12,7 +12,7 @@ export const orbitCamera = new Camera(GLOBAL_GL, {
 orbitCamera.position.set(0, 15, 30)
 
 export const OrbitHelper = () => {
-  const activeCamera = useAppControls((s) => s.activeCamera)
+  const activeCamera = useGlControls((s) => s.activeCamera)
   const orbitActive = activeCamera === "orbit"
 
   const orbitControls = useMemo(() => {

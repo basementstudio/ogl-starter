@@ -7,6 +7,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      zIndex: {
+        "under-canvas": "50",
+        canvas: "100",
+        "over-canvas": "200",
+        "debug-canvas": "9000"
+      },
       colors: {
         gray: {
           lighter: "#262626",

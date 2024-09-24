@@ -8,11 +8,13 @@ interface ImportOptions {
   placholder?: React.ComponentType
 }
 
-export const importAfterInteractive = <P = {},>(
-  importFunction: () => Promise<{ default: React.ComponentType<P> }>,
+type ImportFunction = () => Promise<{ default: React.ComponentType<any> }>
+
+export function importAfterInteractive<P = {}>(
+  importFunction: ImportFunction,
   options: ImportOptions = {}
-) =>
-  memo((props: P) => {
+) {
+  return memo((props: P) => {
     const pageReady = useDocumentReady()
 
     const [Component, setComponent] = useState<React.ComponentType<P> | null>(
@@ -33,7 +35,7 @@ export const importAfterInteractive = <P = {},>(
       return () => {
         abortController.abort()
       }
-    }, [importFunction, pageReady])
+    }, [pageReady])
 
     if (!Component) {
       return options.placholder ? <options.placholder /> : null
@@ -41,3 +43,4 @@ export const importAfterInteractive = <P = {},>(
 
     return <Component {...(props as any)} />
   })
+}

@@ -1,9 +1,8 @@
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { useFrame, useOGL } from "react-ogl"
 
 import { DEFAULT_SCISSOR } from "~/gl"
-import { useAppControls } from "~/gl/hooks/use-app-controls"
-import { useShadowRenderer } from "~/gl/hooks/use-shadow-renderer"
+import { useGlControls } from "~/gl/hooks/use-gl-controls"
 
 import { orbitCamera } from "./components/devex/orbit"
 
@@ -12,24 +11,22 @@ export const RenderLoop = () => {
   const scene = useOGL((s) => s.scene)
   const renderer = useOGL((s) => s.renderer)
 
-  const activeCamera = useAppControls((s) => s.activeCamera)
-  const hasRendered = useAppControls((s) => s.hasRendered)
-  const setHasRendered = useAppControls((s) => s.setHasRendered)
-  const glBackground = useAppControls((s) => s.glBackground)
+  const activeCamera = useGlControls((s) => s.activeCamera)
+  const hasRenderedRef = useRef(false)
+  const setHasRendered = useGlControls((s) => s.setHasRendered)
+  const glBackground = useGlControls((s) => s.glBackground)
 
   const mainCamera = useOGL((s) => s.camera)
-  const shadowCamera = useShadowRenderer((s) => s.light)
 
   const cameraToRender = useMemo(() => {
-    if (activeCamera === "shadow") {
-      return shadowCamera
-    }
     if (activeCamera === "orbit") {
       return orbitCamera
+    } else if (activeCamera === "main") {
+      return mainCamera
     }
 
-    return mainCamera
-  }, [activeCamera, shadowCamera, mainCamera])
+    return null
+  }, [activeCamera, mainCamera])
 
   useEffect(() => {
     // disable default render loop
@@ -44,6 +41,9 @@ export const RenderLoop = () => {
   }, [setOGL])
 
   useFrame(() => {
+    // User is rendering its own camera.
+    if (!cameraToRender) return
+
     renderer.gl.scissor(
       DEFAULT_SCISSOR.x,
       DEFAULT_SCISSOR.y,
@@ -59,8 +59,9 @@ export const RenderLoop = () => {
       camera: cameraToRender
     })
 
-    if (!hasRendered) {
+    if (!hasRenderedRef.current) {
       setHasRendered()
+      hasRenderedRef.current = true
     }
   })
 

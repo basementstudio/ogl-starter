@@ -8,9 +8,9 @@ import { useWindowSize } from "react-use"
 import {
   ANIMATED_GRADIENT_FRAGMENT,
   ANIMATED_GRADIENT_VERTEX
-} from "~/gl/program/animated-gradient"
+} from "./animated-gradient-program"
 
-export const AnimatedGradient = () => {
+export function AnimatedGradient() {
   const meshRef = useRef<Mesh>(null)
   const { gl } = useOGL()
   const geometry = new Triangle(gl)

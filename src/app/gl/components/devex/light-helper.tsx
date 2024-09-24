@@ -3,7 +3,6 @@ import { useMemo, useRef } from "react"
 import { useFrame } from "react-ogl"
 
 import { GLOBAL_GL } from "~/gl"
-import { useShadowRenderer } from "~/gl/hooks/use-shadow-renderer"
 import { COLOR_FRAGMENT, COLOR_VERTEX } from "~/gl/program/color-program"
 
 const arrayEquals = (a: number[], b: number[]) => {
@@ -205,10 +204,13 @@ const getFrustumBoxGeometry = (camera: Camera) => {
   return geo
 }
 
-export const ShadowLightHelper = () => {
+export interface CameraHelperProps {
+  camera: Camera
+}
+
+export const CameraHelper = ({ camera }: CameraHelperProps) => {
   const rootRef = useRef<Transform>()
   const geoRef = useRef<Mesh | null>(null)
-  const light = useShadowRenderer((s) => s.light)
 
   const refs = useRef({
     position: new Vec3(),
@@ -222,40 +224,43 @@ export const ShadowLightHelper = () => {
   })
 
   useFrame(() => {
-    // avoid creating the geometry if the light has not changed
+    // avoid creating the geometry if the camera has not changed
     if (
-      light.position.distance(refs.current.position) > 0 ||
-      !arrayEquals(light.rotation.toArray(), refs.current.rotation.toArray()) ||
-      light.near !== refs.current.near ||
-      light.far !== refs.current.far ||
-      light.top !== refs.current.top ||
-      light.bottom !== refs.current.bottom ||
-      light.left !== refs.current.left ||
-      light.right !== refs.current.right
+      camera.position.distance(refs.current.position) > 0 ||
+      !arrayEquals(
+        camera.rotation.toArray(),
+        refs.current.rotation.toArray()
+      ) ||
+      camera.near !== refs.current.near ||
+      camera.far !== refs.current.far ||
+      camera.top !== refs.current.top ||
+      camera.bottom !== refs.current.bottom ||
+      camera.left !== refs.current.left ||
+      camera.right !== refs.current.right
     ) {
-      refs.current.position.copy(light.position)
-      refs.current.rotation.copy(light.rotation)
-      refs.current.near = light.near
-      refs.current.far = light.far
-      refs.current.top = light.top
-      refs.current.bottom = light.bottom
-      refs.current.left = light.left
-      refs.current.right = light.right
+      refs.current.position.copy(camera.position)
+      refs.current.rotation.copy(camera.rotation)
+      refs.current.near = camera.near
+      refs.current.far = camera.far
+      refs.current.top = camera.top
+      refs.current.bottom = camera.bottom
+      refs.current.left = camera.left
+      refs.current.right = camera.right
     } else {
       return
     }
 
-    rootRef.current?.position.copy(light.position)
-    rootRef.current?.rotation.copy(light.rotation)
+    rootRef.current?.position.copy(camera.position)
+    rootRef.current?.rotation.copy(camera.rotation)
     rootRef.current?.updateMatrixWorld()
     if (geoRef.current) {
-      geoRef.current.geometry = getFrustumBoxGeometry(light)
+      geoRef.current.geometry = getFrustumBoxGeometry(camera)
       geoRef.current.updateMatrixWorld()
       geoRef.current.updateMatrix()
     }
   })
 
-  const frustumGeo = useMemo(() => getFrustumBoxGeometry(light), [light])
+  const frustumGeo = useMemo(() => getFrustumBoxGeometry(camera), [camera])
 
   return (
     <transform ref={rootRef}>
