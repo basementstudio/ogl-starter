@@ -13,7 +13,7 @@ orbitCamera.position.set(0, 15, 30)
 
 export const OrbitHelper = () => {
   const activeCamera = useGlControls((s) => s.activeCamera)
-  const orbitActive = activeCamera === "orbit"
+  const orbitActive = activeCamera === "debug-orbit"
 
   const orbitControls = useMemo(() => {
     return new Orbit(orbitCamera, {

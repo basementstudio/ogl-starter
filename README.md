@@ -11,6 +11,7 @@ The objective of this boilerplate is to set up everything the developer will nee
 - [react-ogl](https://github.com/pmndrs/react-ogl)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Next.js](https://nextjs.org/)
+- [TailwindCSS](https://tailwindcss.com/)
 
 ## Things to Note
 
@@ -42,6 +43,31 @@ The objective of this boilerplate is to set up everything the developer will nee
 - [ ] Add favicons. (Re)Place in `./public`: _32x32_ `favicon.ico`, _perfect square_ `favicon.svg` and `favicon-dark.svg` (_dark theme_), _512x512_ `icon-512.png`, _192x192_ `icon-192.png`, _180x180_ `apple-touch-icon.png`.
 - [ ] Delete `console.log(basementLog)` if not wanted — it's under `main.ts`.
 - [ ] Replace the contents of this file (`README.md`) with the contents of the `README.example.md` file — make sure to adapt it to your project's specific needs. Finally, delete the old `README.example.md` file.
+
+## Implementation details
+
+### Global canvas
+
+To improve performance, there is a global canvas that is created once and reused throughout the app. This canvas can be found inside of `src/app/(with-canvas)/layout.tsx`. So, if you want to add 3D elements to your page, you should create that page inside the `(with-canvas)` folder.
+
+This is done so that you can split what pages that need 3D elements from those that don't.
+If you want the canvas to be present in all pages, you can move it inside of `src/app/layout.tsx` file.
+
+### WebGL context
+
+Inside of `src/app/gl/index.ts` there is a `GLOBAL_GL` variable that is the instance of the WebGL context. This is used to render all of the GL components.
+
+You can use it to create programs outside of the React context.
+
+```ts
+import { GLOBAL_GL } from "~/gl"
+
+export const myCamera = new Camera(GLOBAL_GL, {
+  fov: 75
+})
+```
+
+| To achieve this, we implemented a custom canvas inside of `src/app/gl/basement-canvas.tsx`, it is based on the original canvas from `react-ogl`.
 
 ---
 

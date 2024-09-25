@@ -19,7 +19,7 @@ export const RenderLoop = () => {
   const mainCamera = useOGL((s) => s.camera)
 
   const cameraToRender = useMemo(() => {
-    if (activeCamera === "orbit") {
+    if (activeCamera === "debug-orbit") {
       return orbitCamera
     } else if (activeCamera === "main") {
       return mainCamera

@@ -6,7 +6,7 @@ import { useAppStore } from "~/context/use-app-store"
 import { WebGL } from "~/gl/tunnel"
 
 import { GLOBAL_GL, GLOBAL_RENDERER, MAIN_CAMERA } from ".."
-import { BasementCanvas } from "../canvas"
+import { BasementCanvas } from "../basement-canvas"
 import { useGlControls } from "../hooks/use-gl-controls"
 import { RenderLoop } from "../render-loop"
 import { DebugStateMessages } from "./devex/debug-messages"

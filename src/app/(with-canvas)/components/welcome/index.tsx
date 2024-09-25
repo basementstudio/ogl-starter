@@ -1,7 +1,8 @@
 "use client"
 
-import { AnimatedGradient } from "~/gl/components/animated-gradient"
 import { WebGL } from "~/gl/tunnel"
+
+import { AnimatedGradient } from "../animated-gradient"
 
 export const Welcome = () => {
   return (
