@@ -3,7 +3,7 @@ import { useMemo, useRef } from "react"
 import { useFrame } from "react-ogl"
 
 import { GLOBAL_GL } from "~/gl"
-import { COLOR_FRAGMENT, COLOR_VERTEX } from "~/gl/program/color-program"
+import { COLOR_FRAGMENT, COLOR_VERTEX } from "~/gl/programs/color-program"
 
 const arrayEquals = (a: number[], b: number[]) => {
   return a.length === b.length && a.every((v, i) => v === b[i])
