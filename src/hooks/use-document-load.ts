@@ -72,11 +72,7 @@ export const useDocumentLoadCallback = (
 }
 
 export const useDocumentReady = () => {
-  const [ready, setReady] = useState(false)
-
-  useDocumentLoadCallback(() => {
-    setReady(true)
-  }, [])
+  const ready = useAppStore((s) => s.pageLoadedComplete)
 
   return ready
 }

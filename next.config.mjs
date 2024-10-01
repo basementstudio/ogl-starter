@@ -5,7 +5,15 @@ import withTM from "next-transpile-modules"
  * @type {import('next').NextConfig}
  */
 const config = {
-  // ... configuración existente ...
+  webpack: (config, _options) => {
+    /** Add glslify loader to webpack */
+    config.module.rules.push({
+      test: /\.(glsl|vs|fs|vert|frag)$/,
+      use: ["raw-loader", "glslify-loader"]
+    })
+
+    return config
+  }
 }
 
 const createConfig = (_phase, { defaultConfig: _ }) => {

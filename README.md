@@ -67,6 +67,12 @@ export const myCamera = new Camera(GLOBAL_GL, {
 })
 ```
 
+### Debug mode
+If you visit the site with the `?debug` param, the debug mode will be active, this will add some utils to the site:
+
+- Leva panel: Inside the leva pannel, you will see shortcuts to toggle helpers, grid, device data and more.
+- Use `command+i` to toggle element outlines.
+
 | To achieve this, we implemented a custom canvas inside of `src/app/gl/basement-canvas.tsx`, it is based on the original canvas from `react-ogl`.
 
 ---
