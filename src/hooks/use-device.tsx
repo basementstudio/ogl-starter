@@ -1,7 +1,11 @@
+"use client"
+
 import type { TierResult } from "detect-gpu"
-import { useMemo } from "react"
-import { useBattery } from "react-use"
+import { memo, useEffect } from "react"
 import { create } from "zustand"
+
+import { useBattery } from "./use-battery"
+import { useMedia } from "./use-media"
 
 export interface DeviceType {
   browserName: string
@@ -49,38 +53,113 @@ export interface DeviceType {
   osVersion: string
 }
 
-export interface DeviceGpu {
-  gpu?: TierResult
+interface Battery {
+  charging: boolean
+  level: number
 }
 
-export const useDevice = create<Partial<DeviceType> & DeviceGpu>(() => ({}))
-
-const FORCE_BAKED_SHADOWS = false
-
-export const useShouldRenderRealShadows = () => {
-  const gpuTier = useDevice((s) => s.gpu?.tier)
-  const isMobile = useDevice((s) => s.isMobile || s.isTablet)
-  const hasLowBattery = useLowBattery()
-
-  return useMemo(() => {
-    if (FORCE_BAKED_SHADOWS) return false
-    if (isMobile) return false
-    if (typeof gpuTier === "undefined") return true
-
-    return gpuTier > 1 && !hasLowBattery
-  }, [gpuTier, isMobile, hasLowBattery])
+interface UseDeviceStore {
+  hostScore: number
+  canPlayGame: boolean | null
+  reduceMotion: boolean
+  device: DeviceType | null
+  gpu: TierResult | null
+  battery: Battery | null
 }
 
-export const useLowBattery = () => {
-  const batteryState = useBattery()
+export const useDevice = create<UseDeviceStore>(() => ({
+  hostScore: 0,
+  canPlayGame: null,
+  reduceMotion: false,
+  device: null,
+  gpu: null,
+  battery: null
+}))
 
-  return useMemo(() => {
-    if (!batteryState.isSupported) return false
-    if (!batteryState.fetched) return false
-
-    if (batteryState.level < 0.1) return true
-    if (!batteryState.charging && batteryState.level < 0.3) return true
-
+export function getCanUseWebGl(
+  deviceData: DeviceType,
+  gpuData: TierResult,
+  batteryData: Battery | null,
+  reducedMotion: boolean
+): boolean {
+  if (deviceData.isMobile) {
     return false
-  }, [batteryState])
+  }
+
+  if (reducedMotion) return false
+
+  if (gpuData.tier < 1) {
+    return Boolean(gpuData.gpu?.includes("apple"))
+  }
+
+  if (batteryData) {
+    if (batteryData.level < 0.07) {
+      // no enough battery
+      return false
+    }
+    if (batteryData.level < 0.1 && !batteryData.charging) {
+      return false
+    }
+  }
+
+  return true
 }
+
+// this hook will save the device information in the store
+export const DeviceDetector = memo(function MemoDetector() {
+  const battery = useBattery()
+
+  const reducedMotion = useMedia("(prefers-reduced-motion: reduce)", false)
+
+  useEffect(() => {
+    useDevice.setState({
+      reduceMotion: reducedMotion
+    })
+  }, [reducedMotion])
+
+  useEffect(() => {
+    if (battery.isSupported && battery.fetched) {
+      useDevice.setState({
+        battery: {
+          charging: battery.charging,
+          level: battery.level
+        }
+      })
+    }
+  }, [battery])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const abortController = new AbortController()
+    const signal = abortController.signal
+
+    import("react-device-detect").then((module) => {
+      if (signal.aborted) return
+
+      const newState = module.getSelectorsByUserAgent(
+        navigator.userAgent
+      ) as DeviceType
+
+      useDevice.setState({
+        device: newState
+      })
+    })
+
+    import("detect-gpu").then(({ getGPUTier }) => {
+      if (signal.aborted) return
+
+      getGPUTier().then((gpu) => {
+        if (signal.aborted) return
+        useDevice.setState({
+          gpu
+        })
+      })
+    })
+
+    return () => {
+      abortController.abort()
+    }
+  }, [])
+
+  return null
+})
