@@ -1,13 +1,14 @@
 "use client"
 
-import { AnimatedGradient } from "~/gl/components/animated-gradient"
 import { WebGL } from "~/gl/tunnel"
+
+import { BackgroundGradient } from "../background-gradient"
 
 export const Welcome = () => {
   return (
     <div className="min-h-screen mx-auto pt-20 [&p+p]:mt-2 [&>a]:underline text-white py-18 z-10 [--rounded-lg:8px] [--rounded-md:4px]">
-      <WebGL.In id="animated-gradient">
-        <AnimatedGradient />
+      <WebGL.In>
+        <BackgroundGradient />
       </WebGL.In>
 
       <div className="relative max-w-[900px] mx-auto px-7 z-[1]">
@@ -35,8 +36,15 @@ export const Welcome = () => {
           </p>
         </div>
 
-        <h3 className="mt-8 font-semibold mb-4 text-lg">Utils</h3>
+        <h3 className="mt-8 font-semibold mb-4 text-lg">Debug mode</h3>
         <div className="p-5 bg-gray/50 rounded-[var(--rounded-lg)] border border-[var(--color-gray-lighter)]">
+          <p className="mb-4">
+            Add{" "}
+            <code className="px-1.5 py-0.5 rounded-[var(--rounded-md)] bg-[var(--color-gray-lighter)]">
+              ?debug
+            </code>{" "}
+            to the URL to enable the debug mode.
+          </p>
           <p>
             🔎 Try pressing{" "}
             <code className="px-1.5 py-0.5 rounded-[var(--rounded-md)] bg-[var(--color-gray-lighter)]">

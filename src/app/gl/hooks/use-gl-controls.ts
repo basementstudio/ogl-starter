@@ -1,32 +1,35 @@
 "use client"
 
-import { Color } from "ogl"
+import { Color, OGLRenderingContext, Renderer } from "ogl"
 import { create } from "zustand"
 
-import { isClient } from "~/lib/constants"
-
+import { GLOBAL_GL, GLOBAL_RENDERER } from ".."
 import { DEFAULT_CLEAR_COLOR } from "../constants"
 
-export type CameraName = "main" | "orbit" | "shadow"
+export type CameraName = "main" | "debug-orbit"
 
-export interface DebugStore {
-  isDebug: boolean
-  activeCamera: CameraName
-  multiplyCanvas: boolean
+export interface GlControls {
+  renderer: Renderer
+  gl: OGLRenderingContext
+  activeCamera: CameraName | null
   scrollerContainer: HTMLDivElement | null
   canvasElement: HTMLCanvasElement | null
-  setActiveCamera: (camera: CameraName) => void
+  setActiveCamera: (camera: CameraName | null) => void
   aspect: number
   hasRendered: boolean
   setHasRendered: () => void
   glBackground: Color
 }
 
-export const useAppControls = create<DebugStore>((set) => {
-  const state: DebugStore = {
-    isDebug: false,
+/** A global store for rendering controls */
+export const useGlControls = create<GlControls>((set) => {
+  const gl = GLOBAL_GL
+  if (!gl) return {} as any
+
+  const state: GlControls = {
+    renderer: GLOBAL_RENDERER,
+    gl,
     activeCamera: "main",
-    multiplyCanvas: true,
     scrollerContainer: null,
     canvasElement: null,
     aspect: 1,
@@ -39,15 +42,6 @@ export const useAppControls = create<DebugStore>((set) => {
       set({ activeCamera: camera })
     }
   }
-
-  if (!isClient) {
-    return state
-  }
-
-  const url = new URL(document.location.href)
-
-  const hasDebugParam = url.searchParams.has("debug")
-  state.isDebug = hasDebugParam
 
   return state
 })

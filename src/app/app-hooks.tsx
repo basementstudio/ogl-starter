@@ -6,30 +6,33 @@ import { useEffect } from "react"
 import { useMedia } from "react-use"
 
 import { useAppStore } from "~/context/use-app-store"
-import { useDocumentLoad } from "~/hooks/use-document-load"
-import { basementLog, isClient, isDev, isProd } from "~/lib/constants"
+import { DeviceDetector } from "~/hooks/use-device"
+import { useSyncDocumentLoad } from "~/hooks/use-document-load"
+import { basementLog, isClient, isProd } from "~/lib/constants"
 
 gsap.registerPlugin(useGSAP)
 
 export const AppHooks = () => {
-  // TODO delete this basement log if not a basement project.
   if (isProd && isClient) {
     // eslint-disable-next-line no-console
     console.log(basementLog)
   }
 
-  useDocumentLoad()
-  useReducedMotion()
-  useOverflowDebuggerInDev()
-  useUserIsTabbing()
-  useFontsLoaded()
+  useSyncDocumentLoad()
+  useSyncReducedMotion()
+  useRegisterOverflowDebuggerInDev()
+  useSyncFontsLoaded()
 
-  return null
+  return (
+    <>
+      <DeviceDetector />
+    </>
+  )
 }
 
 /* APP HOOKS */
 
-const useReducedMotion = () => {
+const useSyncReducedMotion = () => {
   const reducedMotion = useMedia("(prefers-reduced-motion: reduce)", false)
   useEffect(() => {
     if (reducedMotion === undefined) return
@@ -37,9 +40,10 @@ const useReducedMotion = () => {
   }, [reducedMotion])
 }
 
-const useOverflowDebuggerInDev = () => {
+const useRegisterOverflowDebuggerInDev = () => {
+  const isDebug = useAppStore((s) => s.isDebug)
   useEffect(() => {
-    if (!isDev) return
+    if (!isDebug) return
     let mousetrapRef: Mousetrap.MousetrapInstance | undefined = undefined
     import("mousetrap").then(({ default: mousetrap }) => {
       mousetrapRef = mousetrap.bind(["command+i", "ctrl+i", "alt+i"], () => {
@@ -50,31 +54,10 @@ const useOverflowDebuggerInDev = () => {
     return () => {
       mousetrapRef?.unbind(["command+i", "ctrl+i", "alt+i"])
     }
-  }, [])
+  }, [isDebug])
 }
 
-const useUserIsTabbing = () => {
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.code === `Tab`) {
-        document.body.classList.add("user-is-tabbing")
-      }
-    }
-
-    function handleMouseDown() {
-      document.body.classList.remove("user-is-tabbing")
-    }
-
-    window.addEventListener("keydown", handleKeyDown)
-    window.addEventListener("mousedown", handleMouseDown)
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown)
-      window.removeEventListener("mousedown", handleMouseDown)
-    }
-  }, [])
-}
-
-const useFontsLoaded = () => {
+const useSyncFontsLoaded = () => {
   useEffect(() => {
     const maxWaitTime = 1500 // tweak this as needed.
 

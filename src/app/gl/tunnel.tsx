@@ -12,8 +12,14 @@ const OriginalIn = _WebGL.In
 const WebGLIn = ({
   id,
   lazy = true,
+  children,
   ...props
-}: React.ComponentProps<typeof _WebGL.In> & { id: string; lazy?: boolean }) => {
+}: React.ComponentProps<typeof _WebGL.In> & {
+  id?: string | number
+  lazy?: boolean
+}) => {
+  const componentId = useId()
+
   const [mounted, setMounted] = useState(lazy ? false : true)
   /* We should mount WebGL ONLY if highPriority animations are NOT running */
   const highPriorityAnimationRunning = useAppStore(
@@ -26,14 +32,22 @@ const WebGLIn = ({
     }
   }, [highPriorityAnimationRunning, lazy, mounted])
 
+  if (typeof id === "string") {
+    return (
+      <OriginalIn {...props} key={id}>
+        {children}
+      </OriginalIn>
+    )
+  }
+
   return (
     <OriginalIn {...props}>
-      {mounted ? <Fragment key={id}>{props.children}</Fragment> : null}
+      {mounted ? <Fragment key={componentId}>{children}</Fragment> : null}
     </OriginalIn>
   )
 }
 
-const WebGL = {
+export const WebGL = {
   Out: _WebGL.Out,
   In: WebGLIn
 }
@@ -67,5 +81,3 @@ export const HtmlIn = ({
 }
 
 export const HtmlOut = _Html.Out
-
-export { WebGL }

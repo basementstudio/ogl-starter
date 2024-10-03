@@ -1,47 +1,52 @@
 import { nanoid } from "nanoid"
-import { TinyEmitter } from "tiny-emitter"
 
 export interface Subscribable<T extends Function = () => void> {
   addCallback: (callback: T, id?: string) => string
-  removeCallback: (id: string | Function) => void
+  removeCallback: (id: string | T) => void
   getCallbacks: () => T[]
   getCallback: (id: string) => T
   getCallbackIds: () => string[]
   clearCallbacks: () => void
-  emitter: TinyEmitter
+  runCallbacks: T
 }
 
-export const subscribable = <T extends Function = () => void>() => {
+export const subscribable = <
+  T extends Function = () => void
+>(): Subscribable<T> => {
   const callbacks: Record<string, T> = {}
-  const emitter = new TinyEmitter()
 
-  const addCallback = (callback: T, id: string) => {
+  const addCallback = (callback: T, id: string): string => {
     const _id = id || nanoid(4)
     callbacks[_id] = callback
-    emitter.emit("add", _id)
     return _id
   }
 
-  const removeCallback = (id: string | Function) => {
+  const removeCallback = (id: string | Function): void => {
     if (typeof id === "function") {
-      const key = Object.keys(callbacks).find((key) => callbacks[key] === id)
+      const key = Object.keys(callbacks).find((k) => callbacks[k] === id)
       if (key) delete callbacks[key]
       return
     }
 
     delete callbacks[id]
-
-    emitter.emit("remove", id)
   }
 
-  const getCallbacks = () => Object.values(callbacks)
+  const getCallbacks = (): T[] => Object.values(callbacks)
 
-  const getCallback = (id: string) => callbacks[id]
+  const getCallback = (id: string): T => callbacks[id]
 
-  const clearCallbacks = () => {
+  const clearCallbacks = (): void => {
     Object.keys(callbacks).forEach((id) => {
       removeCallback(id)
     })
+  }
+
+  const runCallbacks = (...params: unknown[]): void => {
+    let response = undefined as any
+    Object.values(callbacks).forEach((callback) => {
+      response = callback(...params)
+    })
+    return response
   }
 
   return {
@@ -51,6 +56,6 @@ export const subscribable = <T extends Function = () => void>() => {
     getCallbacks,
     getCallbackIds: () => Object.keys(callbacks),
     clearCallbacks,
-    emitter
+    runCallbacks: runCallbacks as unknown as T
   } as Subscribable<T>
 }

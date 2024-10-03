@@ -22,7 +22,7 @@ export const Header = () => {
       <Link
         target="_blank"
         href="https://foundry.basement.studio/"
-        className="flex z-50 relative items-center justify-center gap-2 border-b border-[var(--color-gray-lighter)] h-10 w-full"
+        className="flex relative items-center justify-center gap-2 border-b border-[var(--color-gray-lighter)] h-10 w-full z-over-canvas"
       >
         <p className="leading-[1.19rem] tracking-[-0.02em] uppercase text-[max(12px,0.625vw)]">
           Introducing BASEMENT FOUNDRY. Check it out
@@ -41,7 +41,7 @@ export const Header = () => {
           />
         </svg>
       </Link>
-      <div className="z-50 sticky w-full top-0 p-0 bg-black/70">
+      <div className="sticky w-full top-0 p-0 bg-black/70 z-over-canvas">
         <header className="h-[4.5rem] px-6 flex items-center justify-between z-40 relative border-b border-[var(--color-gray-lighter)]">
           <div className="flex basis-[30%] flex-grow">
             <Link href="/" className="w-11 h-9">

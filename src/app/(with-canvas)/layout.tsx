@@ -1,4 +1,5 @@
 import { LoadPageCanvas } from "~/gl/components/load-page-canvas"
+import { HtmlOut } from "~/gl/tunnel"
 
 export default function WithCanvasLayout({
   children
@@ -7,6 +8,7 @@ export default function WithCanvasLayout({
 }>) {
   return (
     <>
+      <HtmlOut />
       <LoadPageCanvas />
       {children}
     </>

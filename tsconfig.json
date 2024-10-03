@@ -33,8 +33,9 @@
       "~/gl/*": ["./app/gl/*"],
       "~/*": ["./*"]
     },
-    "target": "ES2017"
+    "target": "ES2017",
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "ogl-fix.d.ts"],
   "exclude": ["node_modules"]
 }
