@@ -5,5 +5,14 @@
   "tabWidth": 2,
   "printWidth": 80,
   "trailingComma": "none",
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "plugins": ["prettier-plugin-glsl"],
+  "overrides": [
+    {
+      "files": ["*.frag", "*.vert", "*.glsl"],
+      "options": {
+        "parser": "glsl-parser"
+      }
+    }
+  ]
 }

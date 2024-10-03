@@ -4,6 +4,7 @@
     "tailwindcss.tailwindcss-intellisense",
     "esbenp.prettier-vscode",
     "stylelint.vscode-stylelint",
-    "phoenisx.cssvar"
+    "phoenisx.cssvar",
+    "geforcelegend.vscode-glsl"
   ]
 }
