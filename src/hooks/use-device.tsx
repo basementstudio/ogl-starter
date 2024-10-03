@@ -59,8 +59,6 @@ interface Battery {
 }
 
 interface UseDeviceStore {
-  hostScore: number
-  canPlayGame: boolean | null
   reduceMotion: boolean
   device: DeviceType | null
   gpu: TierResult | null
@@ -68,8 +66,6 @@ interface UseDeviceStore {
 }
 
 export const useDevice = create<UseDeviceStore>(() => ({
-  hostScore: 0,
-  canPlayGame: null,
   reduceMotion: false,
   device: null,
   gpu: null,
