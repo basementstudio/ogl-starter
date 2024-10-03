@@ -11,7 +11,8 @@ const config: Config = {
         "under-canvas": "50",
         canvas: "100",
         "over-canvas": "200",
-        "debug-canvas": "9000"
+        "debug-canvas": "9000",
+        debug: "9001"
       },
       colors: {
         gray: {

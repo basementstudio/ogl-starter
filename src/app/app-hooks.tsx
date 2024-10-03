@@ -6,6 +6,7 @@ import { useEffect } from "react"
 import { useMedia } from "react-use"
 
 import { useAppStore } from "~/context/use-app-store"
+import { DeviceDetector } from "~/hooks/use-device"
 import { useSyncDocumentLoad } from "~/hooks/use-document-load"
 import { basementLog, isClient, isProd } from "~/lib/constants"
 
@@ -22,7 +23,11 @@ export const AppHooks = () => {
   useRegisterOverflowDebuggerInDev()
   useSyncFontsLoaded()
 
-  return null
+  return (
+    <>
+      <DeviceDetector />
+    </>
+  )
 }
 
 /* APP HOOKS */
