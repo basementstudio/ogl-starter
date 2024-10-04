@@ -1,7 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "plugin:prettier/recommended"],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["simple-import-sort", "@typescript-eslint", "prettier", "prettier-plugin-glsl"],
+  "plugins": ["simple-import-sort", "@typescript-eslint", "prettier"],
   "rules": {
     "react/react-in-jsx-scope": 0,
     "react/display-name": 0,
