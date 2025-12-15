@@ -32,7 +32,7 @@
     "lodash-es": "^4.17.21",
     "mousetrap": "^1.6.5",
     "nanoid": "^5.0.7",
-    "next": "14.2.13",
+    "next": "14.2.35",
     "next-transpile-modules": "^10.0.1",
     "ogl": "^1.0.8",
     "react": "^18",
